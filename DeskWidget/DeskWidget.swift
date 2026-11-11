@@ -91,7 +91,7 @@ struct DeskWidgetView: View {
                             .foregroundStyle(Color.primary)
                         Spacer(minLength: 0)
                     }
-                    if family == .systemSmall { arrows.opacity(offline ? 0.4 : 1) }
+                    if family == .systemSmall { arrows.opacity(offline ? 0.35 : 1) }
                 }
                 }
                 if family != .systemSmall {
@@ -107,7 +107,7 @@ struct DeskWidgetView: View {
                         arrows
                     }
                     .frame(maxWidth: 150)
-                    .opacity(offline ? 0.4 : 1)
+                    .opacity(offline ? 0.35 : 1)
                 }
             }
         }
@@ -115,33 +115,33 @@ struct DeskWidgetView: View {
         .containerBackground(for: .widget) { Color(nsColor: .windowBackgroundColor) }
     }
 
-    /// Ошибка связи — красная плашка во всю ширину. В обесцвеченном режиме рабочего
-    /// стола красный пропадает, поэтому там остаются иконка, жирный текст и рамка.
+    /// Ошибка связи — вариант B из мокапа: крупный красный блок вместо высоты.
+    /// В обесцвеченном режиме рабочего стола красный пропадает, поэтому там
+    /// остаются крупная иконка, жирный текст и толстая рамка.
     var banner: some View {
         let small = family == .systemSmall
-        return VStack(alignment: .leading, spacing: small ? 1 : 4) {
-            Label {
-                Text(small ? "Нет связи" : "Нет связи со столом")
-            } icon: {
-                Image(systemName: "exclamationmark.triangle.fill")
-            }
-            .font(.callout.weight(.bold))
-            Text(hintText)
-                .font(.caption.weight(.medium))
-                .lineLimit(small ? 2 : 4)
+        return VStack(alignment: .leading, spacing: small ? 2 : 6) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: small ? 16 : 26, weight: .bold))
+            Text(small ? "Нет связи" : "Нет связи\nсо столом")
+                .font(.system(size: small ? 14 : 17, weight: .heavy))
+                .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
-            if !small { Spacer(minLength: 0) }
+            Text(hintText)
+                .font(.system(size: 11.5, weight: .medium))
+                .lineLimit(small ? 2 : 3)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .foregroundStyle(fullColor ? Color.white : Color.primary)
-        .padding(.horizontal, 8).padding(.vertical, small ? 5 : 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(small ? 8 : 12)
+        .frame(maxWidth: .infinity, maxHeight: small ? nil : .infinity, alignment: .leading)
         .background {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(fullColor ? Color.red : Color.primary.opacity(0.15))
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(fullColor ? Color(red: 0.90, green: 0.20, blue: 0.16) : Color.primary.opacity(0.18))
         }
         .overlay {
             if !fullColor {
-                RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(Color.primary, lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(Color.primary, lineWidth: 2.5)
             }
         }
         .widgetAccentable()
