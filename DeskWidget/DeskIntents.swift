@@ -36,8 +36,8 @@ struct DeskWidgetConfig: WidgetConfigurationIntent {
 
     @Parameter(title: "Название стола (как в приложении IKEA, напр. Desk 1234)", default: "")
     var deskName: String
-    @Parameter(title: "Сидя, см", default: 72) var sitCm: Double
-    @Parameter(title: "Стоя, см", default: 110) var standCm: Double
+    @Parameter(title: "Сидя, см", default: 72.5) var sitCm: Double
+    @Parameter(title: "Стоя, см", default: 112) var standCm: Double
     @Parameter(title: "Третья позиция, см (0 — скрыть)", default: 0) var thirdCm: Double
     @Parameter(title: "Шаг ▲/▼, см", default: 5) var stepCm: Double
 }
