@@ -18,7 +18,7 @@ struct DeskEntry: TimelineEntry {
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> DeskEntry {
         DeskEntry(date: .now, heightCm: 108, connected: true, moving: false, agentAlive: true,
-                  detail: nil, presets: [("Сидя", 72), ("Стоя", 110)])
+                  detail: nil, presets: [("Сидя", 72.5), ("Стоя", 112)])
     }
     func snapshot(for c: DeskWidgetConfig, in context: Context) async -> DeskEntry {
         entry(c, applySettings: !context.isPreview)
@@ -98,7 +98,7 @@ struct DeskWidgetView: View {
                     VStack(spacing: 6) {
                         ForEach(e.presets, id: \.cm) { p in
                             Button(intent: GoToPresetIntent(heightCm: p.cm)) {
-                                HStack { Text(p.name); Spacer(); Text("\(Int(p.cm))").monospacedDigit() }
+                                HStack { Text(p.name); Spacer(); Text(cmLabel(p.cm)).monospacedDigit() }
                                     .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(DeskButtonStyle(highlighted: !offline && isAt(p.cm), fullColor: fullColor))
@@ -156,6 +156,11 @@ struct DeskWidgetView: View {
             }
             Button(intent: NudgeUpIntent()) { Image(systemName: "chevron.up").frame(maxWidth: .infinity) }
         }
+    }
+
+    /// 72 → «72», 72.5 → «72.5».
+    func cmLabel(_ cm: Double) -> String {
+        cm.rounded() == cm ? String(Int(cm)) : String(format: "%.1f", cm)
     }
 
     func isAt(_ cm: Double) -> Bool { e.heightCm.map { abs($0 - cm) < 1 } ?? false }
